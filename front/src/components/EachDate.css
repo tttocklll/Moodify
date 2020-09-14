@@ -1,0 +1,84 @@
+.container {
+    position: relative;
+    padding: 0;
+  }
+  
+  .date {
+    z-index: 3;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .back-left {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 50%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.5;
+  }
+  
+  .back-right {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 50%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.5;
+  }
+  
+  .emotion0 {
+    background-color: white;
+  }
+  
+  .emotion1 {
+    background: linear-gradient(180deg, white 0%, white 83%, blue 83%, blue 100%);
+  }
+  
+  .emotion2 {
+    background: linear-gradient(
+      180deg,
+      white 0%,
+      white 66%,
+      rgb(0, 85, 255) 66%,
+      rgb(0, 85, 255) 100%
+    );
+  }
+  
+  .emotion3 {
+    background: linear-gradient(
+      180deg,
+      white 0%,
+      white 50%,
+      rgb(0, 170, 255) 50%,
+      rgb(0, 170, 255) 100%
+    );
+  }
+  
+  .emotion4 {
+    background: linear-gradient(
+      180deg,
+      white 0%,
+      white 33%,
+      rgb(0, 255, 170) 33%,
+      rgb(0, 255, 170) 100%
+    );
+  }
+  
+  .emotion5 {
+    background: linear-gradient(
+      180deg,
+      white 0%,
+      white 17%,
+      rgb(0, 255, 85) 17%,
+      rgb(0, 255, 85) 100%
+    );
+  }
+  
+  .emotion6 {
+    background: linear-gradient(180deg, rgb(0, 255, 0) 66%, rgb(0, 255, 0) 100%);
+  }
