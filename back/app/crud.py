@@ -4,9 +4,8 @@ import hashlib
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, List
 from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
 
 # to get a string like this run:
 # openssl rand -hex 32
@@ -14,7 +13,6 @@ SECRET_KEY = "91a63ede3ef783ba8e1578db94068af8dc23bacb6624fd1e720d66627a0e0fdb"
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 # Authentication
@@ -27,7 +25,8 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-async def get_current_student(db: Session, token: str = Depends(oauth2_scheme)):
+# also usable for Authorization
+async def get_current_student(token: str, db: Session):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -35,13 +34,16 @@ async def get_current_student(db: Session, token: str = Depends(oauth2_scheme)):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
+        email: str = payload.get("email")
+        if email is None:
+            raise credentials_exception
+        username: str = payload.get("username")
         if username is None:
             raise credentials_exception
-        token_data = schemas.TokenData(username=username)
+        token_data = schemas.TokenData(username=username, email=email)
     except JWTError:
         raise credentials_exception
-    student = get_student_by_name(db, token_data.username)
+    student = get_student_by_email(db, token_data.email)
     if student is None:
         raise credentials_exception
     return student
@@ -100,12 +102,16 @@ def create_student(db: Session, student: schemas.StudentCreate):
 
 # post
 
-def get_post(db: Session, post_id: int):
+async def get_post(db: Session, post_id: int):
     return db.query(models.Post).filter(models.Post.id == post_id).all()
 
 
-def get_post_by_user_id(db: Session, user_id: int):
+async def get_post_by_user_id(db: Session, user_id: int):
     return db.query(models.Post).filter(models.Post.user_id == user_id).all()
+
+
+async def get_post_by_time(db: Session, start: float, end: float):
+    return db.query(models.Post).filter(start <= models.Post.posted_at).filter(models.Post.posted_at <= end).all()
 
 
 async def create_post(db: Session, post: schemas.PostCreate, user_id: int):
@@ -120,7 +126,7 @@ async def create_post(db: Session, post: schemas.PostCreate, user_id: int):
     db.add(db_post)
     db.commit()
     db.refresh(db_post)
-    for scene in post.scenes:
+    for scene in post.temp_scenes:
         create_scene(db, scene, db_post.id)
     for answer in post.answers:
         create_answer(db, answer, db_post.id)
@@ -147,6 +153,28 @@ def create_question(db: Session, question: schemas.QuestionCreate):
     db.commit()
     db.refresh(db_question)
     return db_question
+
+
+async def get_question_by_id(db: Session, id: int):
+    return db.query(models.Question).filter(models.Question.id == id).first()
+
+
+def get_all_question(db: Session):
+    return db.query(models.Question).all()
+
+
+async def update_next_questions(db: Session, questions: List[int], student_id: int):
+    student = get_student(db, student_id)
+    if not student:
+        return None
+    student.q1 = questions[0]
+    student.q2 = questions[1]
+    student.q3 = questions[2]
+    db.commit()
+    print(student.q1)
+    return student
+
+# answer
 
 
 def create_answer(db: Session, answer: schemas.AnswerCreate, post_id: int):

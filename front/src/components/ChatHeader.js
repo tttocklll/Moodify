@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Navbar, Dropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function ChatHeader() {
-  const [talkWith, setTalkWith] = useState("ロボットくん");
+  // const [talkWith, setTalkWith] = useState("ロボットくん");
   return (
     <Navbar
       style={{ backgroundColor: "#a7adb5" }}

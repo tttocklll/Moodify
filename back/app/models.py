@@ -11,6 +11,9 @@ class Student(Base):
     name = Column(String)
     email = Column(String, unique=True)
     hashed_password = Column(String)
+    q1 = Column(Integer)
+    q2 = Column(Integer)
+    q3 = Column(Integer)
 
     posts = relationship("Post", back_populates="writer")
 

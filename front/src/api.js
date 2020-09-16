@@ -14,7 +14,7 @@ export const login = async (body) => {
     {
       headers: { 'Content-Type': 'application/json' }
     }
-  )
+  );
   return res;
 }
 
@@ -25,32 +25,101 @@ export const signup = async (body) => {
     {
       headers: { 'Content-Type': 'application/json' }
     }
-  )
+  );
   return res;
 }
 
-export const get_all_students = async () => {
-  const token = await asyncLocalStorage.getItem("access_token")
+export const getAllStudents = async () => {
   const res = await axios.get(`${baseURL}/students/`,
     {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Content-Type': 'application/json'
       }
     }
-  )
+  );
   return res;
 }
 
-export const get_current_student = async () => {
+export const getCurrentStudent = async () => {
   const token = await asyncLocalStorage.getItem("access_token")
   const res = await axios.get(`${baseURL}/status/`,
     {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'token': token
       }
     }
-  )
+  );
+  return res;
+}
+
+export const getAllQuestions = async () => {
+  const res = await axios.get(`${baseURL}/questions/`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }
+  );
+  return res;
+}
+
+export const addQuestion = async (body) => {
+  const res = await axios.post(`${baseURL}/questions/`,
+    body,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+  return res;
+}
+
+export const setQuestions = async (body, user_id) => {
+  const res = await axios.post(`${baseURL}/update-questions/${user_id}/`,
+    body,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+  return res;
+}
+
+export const chatQuestions = async () => {
+  const token = await asyncLocalStorage.getItem("access_token")
+  const res = await axios.get(`${baseURL}/chat-questions/`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      }
+    }
+  );
+  return res;
+}
+
+export const postChat = async (body) => {
+  const token = await asyncLocalStorage.getItem("access_token");
+  const res = await axios.post(`${baseURL}/post/`,
+    body,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      }
+    });
+  return res;
+}
+
+export const getPostMonthly = async (year, month) => {
+  const token = await asyncLocalStorage.getItem("access_token");
+  const res = await axios.get(`${baseURL}/post?year=${year}&month=${month}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      }
+    });
   return res;
 }

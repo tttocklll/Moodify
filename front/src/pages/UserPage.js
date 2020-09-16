@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "@material-ui/core";
-import { get_current_student } from "../api"
+import { useHistory } from "react-router-dom";
+import { Container, Button } from "@material-ui/core";
+import { getCurrentStudent } from "../api"
 import ErrorMessage from './../components/ErrorMessage'
+import useLoginRedirect from '../hooks/useLoginRedirect'
+import { asyncLocalStorage } from "../utils"
 
 const UserPage = () => {
   const [userProfile, setUserProfile] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
+  useLoginRedirect();
+  const history = useHistory();
   useEffect(() => {
     const f = async () => {
       try {
-        const res = await get_current_student();
+        const res = await getCurrentStudent();
         setUserProfile(res.data);
         console.log(res.data);
       } catch (err) {
@@ -19,6 +24,11 @@ const UserPage = () => {
     f();
   }, []
   );
+
+  const handleLogout = async () => {
+    await asyncLocalStorage.removeItem("access_token");
+    history.push("/");
+  }
   return (
     <Container maxWidth="xs">
       <ErrorMessage message={errorMessage} />
@@ -32,6 +42,7 @@ const UserPage = () => {
         ) :
         ""
       }
+      <Button fullWidth onClick={handleLogout}>Log out</Button>
     </Container>
   )
 }

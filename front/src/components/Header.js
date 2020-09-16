@@ -26,22 +26,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MenuAppBar() {
   const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
   const location = useLocation();
-
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
-
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <div className={classes.root}>
@@ -51,9 +37,9 @@ export default function MenuAppBar() {
             <MenuIcon />
           </IconButton> */}
           <Typography variant="h6" className={classes.title}>
-            <a style={{ font: "inherit" }} onClick={() => history.push(["/", "/signup", "/login"].includes(location.pathname) ? "/" : "/dashboard")}>
+            <button style={{ font: "inherit", backgroundColor: "inherit", border: "inherit", color: "inherit" }} onClick={() => history.push(["/", "/signup", "/login"].includes(location.pathname) ? "/" : "/dashboard")}>
               Moodify
-            </a>
+            </button>
           </Typography>
           {!(["/", "/signup", "/login"].includes(location.pathname)) && (
             <div>

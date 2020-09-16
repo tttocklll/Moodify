@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Container, Button, makeStyles } from "@material-ui/core";
 
@@ -34,8 +34,15 @@ const useStyles = makeStyles((theme) =>
 );
 
 const Home = () => {
+  const [count, setCount] = useState(0)
   const classes = useStyles();
   const history = useHistory();
+
+  const handleClick = () => {
+    if (count + 1 >= 20) history.push("/dev/show-all-questions");
+    setCount(count + 1);
+  }
+
   return (
     <Container maxWidth="xs">
       <div className={classes.paper}>
@@ -43,6 +50,8 @@ const Home = () => {
         <Button fullWidth onClick={() => history.push("/login")} className={classes.submit}>Login</Button>
         <hr />
         <Button fullWidth onClick={() => history.push("/signup")} className={classes.submit}>Signup</Button>
+        <hr />
+        <Button fullWidth onClick={handleClick}>for DevTeam</Button>
       </div>
     </Container>
   )

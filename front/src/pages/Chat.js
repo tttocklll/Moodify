@@ -1,16 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import ChatBot from "react-simple-chatbot";
 import useWindowDimensions from "../misc/useWindowDimensions.js";
 import SelectScene from "../components/SelectScene";
-import ChatHeader from "../components/ChatHeader";
+import ErrorMessage from './../components/ErrorMessage'
+import useLoginRedirect from '../hooks/useLoginRedirect'
+import { chatQuestions, postChat } from "../api"
+
 
 function CustomChatbot(props) {
-  const [emotionGrade, setEmotionGrade] = useState(0);
-  const [emotionPhrase, setEmotionPhrase] = useState("");
-  const [selectedScene, setSelectedScene] = useState([]);
+  const [questions, setQuestions] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const { height, width } = useWindowDimensions();
+  useLoginRedirect();
+  const history = useHistory();
 
-  const waitTime = 1000;
+  useEffect(() => {
+    const f = async () => {
+      try {
+        const res = await chatQuestions();
+        setQuestions(res.data);
+      } catch (err) {
+        setErrorMessage(err.message);
+      }
+    }
+    f();
+  }, []);
+
+  const handleSubmit = async (steps) => {
+    const body = {
+      emotion_value: steps.emotionValue.value,
+      emotion_phrase: steps["Positive emotion"] ? steps["Positive emotion"].value : steps["Negative emotion"].value,
+      comment: steps.comment ? steps.comment.value : "",
+      temp_scenes: steps["Displaying options of scene"].value,
+      answers: [
+        { answer: steps.A1.value, question_id: questions[0].id },
+        { answer: steps.A2.value, question_id: questions[1].id },
+        { answer: steps.A3.value, question_id: questions[2].id }
+      ]
+    }
+    try {
+      await postChat(body);
+      history.push("/dashboard");
+    } catch (err) {
+      setErrorMessage(err.message);
+    }
+  }
+
+
+  const waitTime = 500;
   const config = {
     width: `${width}px`,
     height: `${height}px`,
@@ -29,9 +67,9 @@ function CustomChatbot(props) {
       color: "black",
     },
     headerComponent: <div />,
-    handleEnd: ({ steps }) => {
-      setSelectedScene(steps["Displaying options of scene"].value);
-    },
+    // handleEnd: ({ steps }) => {
+    //   setSelectedScene(steps["Displaying options of scene"].value);
+    // },
   };
 
   const createOptions = (values, labels, trigger, setter) => {
@@ -51,7 +89,9 @@ function CustomChatbot(props) {
     return res;
   };
 
-  const steps = [
+
+
+  const steps = questions && [
     {
       id: "Greet",
       message: "こんにちは！",
@@ -64,7 +104,7 @@ function CustomChatbot(props) {
     },
     {
       id: "Q1",
-      message: "昨日は良く眠れましたか？",
+      message: questions[0].question,
       trigger: "A1",
     },
     {
@@ -73,7 +113,7 @@ function CustomChatbot(props) {
     },
     {
       id: "Q2",
-      message: "やるべきことに追われていますか？",
+      message: questions[1].question,
       trigger: "A2",
     },
     {
@@ -82,7 +122,7 @@ function CustomChatbot(props) {
     },
     {
       id: "Q3",
-      message: "授業は楽しかったですか？",
+      message: questions[2].question,
       trigger: "A3",
     },
     {
@@ -105,33 +145,30 @@ function CustomChatbot(props) {
         [6, 5, 4, 3, 2, 1],
         ["😆", "😄", "😃", "😓", "😫", "😨"],
         "Asking options of positive emotion",
-        setEmotionGrade
       ),
     },
     {
       id: "Asking options of positive emotion",
       message: `言葉にするとどんな感情かな？`,
       trigger: ({ steps }) => {
-        return `Displaying options of ${steps.emotionValue.value > 3 ? "positive" : "negative"
+        return `${steps.emotionValue.value > 3 ? "Positive" : "Negative"
           } emotion`;
       },
     },
     {
-      id: "Displaying options of positive emotion",
+      id: "Positive emotion",
       options: createOptions(
         ["楽しい", "嬉しい"],
         ["楽しい", "嬉しい"],
         "Confirm emotion",
-        setEmotionPhrase
       ),
     },
     {
-      id: "Displaying options of negative emotion",
+      id: "Negative emotion",
       options: createOptions(
         ["悲しい", "残念な"],
         ["悲しい", "残念な"],
         "Confirm emotion",
-        setEmotionPhrase
       ),
     },
     {
@@ -242,11 +279,23 @@ function CustomChatbot(props) {
     },
     {
       id: "bye",
-      message: "おつかれさま！",
+      message: ({ steps }) => {
+        // setComment(steps.comment ? steps.comment.comment : "");
+        handleSubmit(steps);
+        return "お疲れさまでした！"
+      },
       end: true,
     },
   ];
 
-  return <ChatBot steps={steps} {...config} />;
+  return (
+    <div>
+      <ErrorMessage message={errorMessage} />
+      {questions ?
+        <ChatBot steps={steps} {...config} /> :
+        ""
+      }
+    </div>
+  );
 }
 export default CustomChatbot;
