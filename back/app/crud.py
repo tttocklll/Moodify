@@ -92,7 +92,8 @@ def create_student(db: Session, student: schemas.StudentCreate):
     db_student = models.Student(
         name=student.name,
         hashed_password=hashed_password,
-        email=student.email
+        email=student.email,
+        q1=1, q2=2, q3=3
     )
     db.add(db_student)
     db.commit()

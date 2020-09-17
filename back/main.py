@@ -171,8 +171,6 @@ async def update_next_questions(user_id: int, questions: List[int], db: Session 
                 status_code=422, detail=f"Question id:{i} not found.")
     return await crud.update_next_questions(db, questions, user_id)
 
-# TODO: user_idからポジティブ・ネガティブ要素
-
 
 @app.get("/get-factor/positive")
 @async_authorization
