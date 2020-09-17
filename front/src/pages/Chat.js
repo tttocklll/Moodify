@@ -44,7 +44,7 @@ function CustomChatbot(props) {
     };
     try {
       await postChat(body);
-      await sleep(1000);
+      await sleep(2000);
       history.push("/dashboard");
     } catch (err) {
       setErrorMessage(err.message);
@@ -93,11 +93,37 @@ function CustomChatbot(props) {
     {
       id: "Greet",
       message: "こんにちは！",
-      trigger: "Ask user to answer questions",
+      trigger: "Start",
+    },
+    {
+      id: "Start",
+      message:
+        "チャットを開始しますか？（別のページに移動すれば途中でもやめられます）",
+      trigger: "Confirm Start",
+    },
+    {
+      id: "Confirm Start",
+      options: [
+        {
+          value: "開始する",
+          label: "開始する",
+          trigger: "Ask user to answer questions",
+        },
+        {
+          value: "やめる",
+          label: "やめる",
+          trigger: "Quit",
+        },
+      ],
+    },
+    {
+      id: "Quit",
+      message: "了解！またあとでね！",
+      end: true,
     },
     {
       id: "Ask user to answer questions",
-      message: "まずはいくつかの質問に答えてね。",
+      message: "わかりました！\nまずはいくつかの質問に答えてね。",
       trigger: "Q1",
     },
     {
@@ -327,7 +353,7 @@ function CustomChatbot(props) {
       message: ({ steps }) => {
         // setComment(steps.comment ? steps.comment.comment : "");
         handleSubmit(steps);
-        return "お疲れさまでした！";
+        return "お疲れさまでした！\n（ダッシュボードに遷移します）";
       },
       end: true,
     },
