@@ -1,7 +1,7 @@
 import uvicorn
 from functools import wraps
 from typing import List
-
+from collections import Counter
 from fastapi import Depends, FastAPI, HTTPException, status, Header
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -171,6 +171,34 @@ async def update_next_questions(user_id: int, questions: List[int], db: Session 
     return await crud.update_next_questions(db, questions, user_id)
 
 # TODO: user_idからポジティブ・ネガティブ要素
+
+
+@app.get("/get-factor/positive")
+@async_authorization
+async def get_positive_factor(token: str = Header(None), db: Session = Depends(get_db)):
+    student = await crud.get_current_student(token, db)
+    posts = list(
+        filter(lambda item: item.emotion_value > 3, student.posts))
+    temp = []
+    for post in posts:
+        for scene in post.scenes:
+            temp.append(scene.scene)
+    counters = Counter(temp).most_common()
+    return [factor[0] for factor in counters]
+
+
+@app.get("/get-factor/negative")
+@async_authorization
+async def get_negative_factor(token: str = Header(None), db: Session = Depends(get_db)):
+    student = await crud.get_current_student(token, db)
+    posts = list(
+        filter(lambda item: item.emotion_value <= 3, student.posts))
+    temp = []
+    for post in posts:
+        for scene in post.scenes:
+            temp.append(scene.scene)
+    counters = Counter(temp).most_common()
+    return [factor[0] for factor in counters]
 
 
 @app.get("/get-post-detail/{post_id}")
