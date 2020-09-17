@@ -10,6 +10,7 @@ function EachDate(props) {
         width: props.width,
         height: props.height,
       }}
+      onClick={props.onClick}
     >
       <div className="date" style={{ fontSize: props.height * 0.5 }}>
         {props.date}

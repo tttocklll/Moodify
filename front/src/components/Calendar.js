@@ -1,11 +1,17 @@
-
 import React from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import { Container } from "@material-ui/core";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import EachDate from "./EachDate";
 
-function Calendar(props) {
+// time functions
+const getDayUnix = (year, month, date) => ({
+  start: new Date(year, month, date, 0, 0, 0).getTime() / 1000,
+  noon: new Date(year, month, date, 12, 0, 0).getTime() / 1000,
+  end: new Date(year, month, date, 23, 59, 59).getTime() / 1000,
+});
+
+const Calendar = (props) => {
   const createIndex = ["日", "月", "火", "水", "木", "金", "土"].map(
     (day, i) => {
       return (
@@ -25,19 +31,28 @@ function Calendar(props) {
           week.push(<Col key={100 + j} style={{ padding: "10px 0px" }} />);
       }
       for (let i = 0; i < 7; i++) {
+        const date = curDate.getDate();
+        const { start, noon, end } = getDayUnix(year, month - 1, date);
+        const am = props.posts.filter(
+          (post) => start <= post.posted_at && post.posted_at < noon
+        );
+        const pm = props.posts.filter(
+          (post) => noon <= post.posted_at && post.posted_at < end
+        );
         week.push(
-          <Col key={curDate.getDate()} style={{ padding: "10px 0px" }}>
+          <Col key={date} style={{ padding: "10px 0px" }}>
             <EachDate
-              date={curDate.getDate()}
-              height={50}
-              left={Math.ceil(Math.random() * 6)}
-              right={Math.ceil(Math.random() * 6)}
+              date={date}
+              height={40}
+              left={am.length !== 0 ? am[0].emotion_value : 0}
+              right={pm.length !== 0 ? pm[0].emotion_value : 0}
+              onClick={() => props.onClick(date)}
             />
           </Col>
         );
 
         if (curDate.getDay() === 6) return week;
-        curDate.setDate(curDate.getDate() + 1);
+        curDate.setDate(date + 1);
         if (curDate.getMonth() + 1 !== month) {
           for (let j = 0; j < 7 - curDate.getDay(); j++)
             week.push(<Col key={200 + j} style={{ padding: "10px 0px" }} />);
@@ -62,9 +77,9 @@ function Calendar(props) {
         <Button variant={null} onClick={props.onClickLeft}>
           <FaChevronLeft />
         </Button>
-        <p style={{ fontSize: 30 }} onClick={props.onClickRight}>
+        <p style={{ fontSize: 25, margin: 0 }}>
           {props.year}年 {props.month}月
-          </p>
+        </p>
         <Button variant={null} onClick={props.onClickRight}>
           <FaChevronRight />
         </Button>
@@ -73,6 +88,6 @@ function Calendar(props) {
       {createCalendar(props.year, props.month)}
     </Container>
   );
-}
+};
 
 export default Calendar;

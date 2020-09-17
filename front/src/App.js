@@ -11,6 +11,9 @@ import DashBoard from "./pages/DashBoard"
 import UserPage from "./pages/UserPage"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
+import ShowAllQuestion from "./forDev/ShowAllQuestion"
+import AddQuestion from "./forDev/AddQuestion"
+import SetQuestions from "./forDev/SetQuestions"
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -26,6 +29,9 @@ function App() {
         <Route exact path="/mypage" component={UserPage} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Signup} />
+        <Route exact path="/dev/show-all-questions" component={ShowAllQuestion} />
+        <Route exact path="/dev/add-question" component={AddQuestion} />
+        <Route exact path="/dev/set-question" component={SetQuestions} />
       </Switch>
     </Router >
   );
