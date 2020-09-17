@@ -98,9 +98,9 @@ class StudentCreate(StudentBase):
 class Student(StudentBase):
     id: int
     posts: List[Post] = None
-    q1: Optional[int] = None
-    q2: Optional[int] = None
-    q3: Optional[int] = None
+    q1: Optional[int] = 1
+    q2: Optional[int] = 2
+    q3: Optional[int] = 3
 
     class Config:
         orm_mode = True

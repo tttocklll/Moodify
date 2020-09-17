@@ -132,9 +132,10 @@ async def post(
 @app.get("/post/")
 @async_authorization
 async def get_post_monthly(year: int, month: int, token: str = Header(None), db: Session = Depends(get_db)):
+    student = await crud.get_current_student(token, db)
     start = get_firstdate_unix(year, month)
     end = get_lastdate_unix(year, month)
-    return await crud.get_post_by_time(db, start, end)
+    return await crud.get_post_by_user_and_time(db, start, end, student.id)
 
 
 @app.post("/questions/")
