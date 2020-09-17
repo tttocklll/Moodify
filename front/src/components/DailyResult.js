@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Box from "@material-ui/core/Box";
+import { AppBar, Tabs, Tab, Box, Button } from "@material-ui/core";
+import { getPostDetails } from "../api";
+import ErrorMessage from "./../components/ErrorMessage";
+import ResultDetails from "./ResultDetails";
+
+const emoji = ["😆", "😄", "😃", "😓", "😫", "😨"];
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -29,9 +31,25 @@ TabPanel.propTypes = {
 
 const DailyResult = (props) => {
   const [isMorning, setIsMorning] = useState(1);
+  const [amDetails, setAmDetails] = useState(null);
+  const [pmDetails, setPmDetails] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const { am, pm } = props;
-  // TODO: シーン取得
-  // TODO: 質疑応答取得
+
+  useEffect(() => {
+    const f = async () => {
+      try {
+        const amRes = am ? await getPostDetails(am.id) : null;
+        setAmDetails(amRes ? amRes.data : null);
+        const pmRes = pm ? await getPostDetails(pm.id) : null;
+        setPmDetails(pmRes ? pmRes.data : null);
+      } catch (err) {
+        setErrorMessage(err.message);
+      }
+    };
+    f();
+  }, [am, pm]);
+
   return (
     <div>
       <AppBar
@@ -49,25 +67,23 @@ const DailyResult = (props) => {
         </Tabs>
       </AppBar>
       <TabPanel value={isMorning} index={0}>
-        {am ? (
-          <div>
-            感情値：{am.emotion_value}「{am.emotion_phrase}」 コメント：
-            {am.comment}
-          </div>
+        <ErrorMessage message={errorMessage} />
+        {am && amDetails ? (
+          <ResultDetails post={am} postDetails={amDetails} />
         ) : (
           "データがありません"
         )}
       </TabPanel>
       <TabPanel value={isMorning} index={1}>
-        {pm ? (
-          <div>
-            感情値：{pm.emotion_value}「{pm.emotion_phrase}」 コメント：
-            {pm.comment}
-          </div>
+        {pm && pmDetails ? (
+          <ResultDetails post={pm} postDetails={pmDetails} />
         ) : (
           "データがありません"
         )}
       </TabPanel>
+      <Button fullWidth onClick={props.onClose}>
+        close
+      </Button>
     </div>
   );
 };

@@ -93,7 +93,7 @@ const Dashboard = () => {
       <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
         <div>
           {displayMonth.getFullYear()}/{displayMonth.getMonth() + 1}/{modalDate}
-          <DailyResult {...getPost()} />
+          <DailyResult {...getPost()} onClose={() => setIsModalOpen(false)} />
         </div>
       </Modal>
     </Container>
