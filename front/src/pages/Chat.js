@@ -107,7 +107,7 @@ function CustomChatbot(props) {
     },
     {
       id: "A1",
-      options: createOptions(["yes", "no"], ["はい", "いいえ"], "Q2"),
+      options: createOptions(["はい", "いいえ"], ["はい", "いいえ"], "Q2"),
     },
     {
       id: "Q2",
@@ -116,7 +116,7 @@ function CustomChatbot(props) {
     },
     {
       id: "A2",
-      options: createOptions(["yes", "no"], ["はい", "いいえ"], "Q3"),
+      options: createOptions(["はい", "いいえ"], ["はい", "いいえ"], "Q3"),
     },
     {
       id: "Q3",
@@ -125,7 +125,7 @@ function CustomChatbot(props) {
     },
     {
       id: "A3",
-      options: createOptions(["yes", "no"], ["はい", "いいえ"], "Thanks"),
+      options: createOptions(["はい", "いいえ"], ["はい", "いいえ"], "Thanks"),
     },
     {
       id: "Thanks",
