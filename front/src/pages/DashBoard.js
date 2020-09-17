@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import Calendar from "../components/Calendar";
 import Factor from "../components/Factor";
 import Modal from "react-modal";
-import { Container } from "@material-ui/core";
+import { Container, Button } from "@material-ui/core";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { getPostMonthly } from "../api";
 import DailyResult from "../components/DailyResult";
 import useLoginRedirect from "../hooks/useLoginRedirect";
@@ -95,7 +96,27 @@ const Dashboard = () => {
       )}
       <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
         <div>
-          {displayMonth.getFullYear()}/{displayMonth.getMonth() + 1}/{modalDate}
+          <Button fullWidth onClick={() => setIsModalOpen(false)}>
+            close
+          </Button>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-around",
+            }}
+          >
+            <Button variant={null} onClick={() => setModalDate(modalDate - 1)}>
+              <FaChevronLeft />
+            </Button>
+            <p style={{ fontSize: 20, margin: 0 }}>
+              {displayMonth.getFullYear()}/{displayMonth.getMonth() + 1}/
+              {modalDate}
+            </p>
+            <Button variant={null} onClick={() => setModalDate(modalDate + 1)}>
+              <FaChevronRight />
+            </Button>
+          </div>
           <DailyResult {...getPost()} onClose={() => setIsModalOpen(false)} />
         </div>
       </Modal>

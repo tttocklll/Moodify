@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import { Container } from "@material-ui/core";
@@ -10,7 +9,7 @@ const getDayUnix = (year, month, date) => ({
   start: new Date(year, month, date, 0, 0, 0).getTime() / 1000,
   noon: new Date(year, month, date, 12, 0, 0).getTime() / 1000,
   end: new Date(year, month, date, 23, 59, 59).getTime() / 1000,
-})
+});
 
 const Calendar = (props) => {
   const createIndex = ["日", "月", "火", "水", "木", "金", "土"].map(
@@ -33,9 +32,13 @@ const Calendar = (props) => {
       }
       for (let i = 0; i < 7; i++) {
         const date = curDate.getDate();
-        const { start, noon, end } = getDayUnix(year, month - 1, date)
-        const am = props.posts.filter(post => start <= post.posted_at && post.posted_at < noon)
-        const pm = props.posts.filter(post => noon <= post.posted_at && post.posted_at < end)
+        const { start, noon, end } = getDayUnix(year, month - 1, date);
+        const am = props.posts.filter(
+          (post) => start <= post.posted_at && post.posted_at < noon
+        );
+        const pm = props.posts.filter(
+          (post) => noon <= post.posted_at && post.posted_at < end
+        );
         week.push(
           <Col key={date} style={{ padding: "10px 0px" }}>
             <EachDate
@@ -74,9 +77,9 @@ const Calendar = (props) => {
         <Button variant={null} onClick={props.onClickLeft}>
           <FaChevronLeft />
         </Button>
-        <p style={{ fontSize: 25, textAlign: "center" }} onClick={props.onClickRight}>
+        <p style={{ fontSize: 25, margin: 0 }}>
           {props.year}年 {props.month}月
-          </p>
+        </p>
         <Button variant={null} onClick={props.onClickRight}>
           <FaChevronRight />
         </Button>
@@ -85,6 +88,6 @@ const Calendar = (props) => {
       {createCalendar(props.year, props.month)}
     </Container>
   );
-}
+};
 
 export default Calendar;

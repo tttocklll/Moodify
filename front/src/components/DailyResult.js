@@ -30,7 +30,7 @@ TabPanel.propTypes = {
 };
 
 const DailyResult = (props) => {
-  const [isMorning, setIsMorning] = useState(1);
+  const [isMorning, setIsMorning] = useState(0);
   const [amDetails, setAmDetails] = useState(null);
   const [pmDetails, setPmDetails] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -81,9 +81,6 @@ const DailyResult = (props) => {
           "データがありません"
         )}
       </TabPanel>
-      <Button fullWidth onClick={props.onClose}>
-        close
-      </Button>
     </div>
   );
 };
