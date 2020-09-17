@@ -160,7 +160,6 @@ async def get_chat_questions(token: str = Header(None), db: Session = Depends(ge
 
 @app.post("/update-questions/{user_id}")
 async def update_next_questions(user_id: int, questions: List[int], db: Session = Depends(get_db)):
-    print(user_id)
     if len(questions) != 3:
         raise HTTPException(
             status_code=422, detail="Questions must have 3 integers")
@@ -171,8 +170,22 @@ async def update_next_questions(user_id: int, questions: List[int], db: Session 
                 status_code=422, detail=f"Question id:{i} not found.")
     return await crud.update_next_questions(db, questions, user_id)
 
+# TODO: user_idからポジティブ・ネガティブ要素
+
+
+@app.get("/get-post-detail/{post_id}")
+@async_authorization
+async def get_post_detail(post_id: int, token: str = Header(None), db: Session = Depends(get_db)):
+    post = await crud.get_post(db, post_id)
+    # answersの中にquestionを含めるための作業
+    # SQLAlchemyに多分もっといいのがあるはず
+    for answer in post.answers:
+        answer.question
+    return {"scenes": post.scenes, "answers": post.answers}
 
 # test
+
+
 @app.get("/test/")
 def test(db: Session = Depends(get_db)):
     print(datetime.datetime.fromtimestamp(get_lastdate_unix(2020, 9)))

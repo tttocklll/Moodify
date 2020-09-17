@@ -103,7 +103,7 @@ def create_student(db: Session, student: schemas.StudentCreate):
 # post
 
 async def get_post(db: Session, post_id: int):
-    return db.query(models.Post).filter(models.Post.id == post_id).all()
+    return db.query(models.Post).filter(models.Post.id == post_id).first()
 
 
 async def get_post_by_user_id(db: Session, user_id: int):
