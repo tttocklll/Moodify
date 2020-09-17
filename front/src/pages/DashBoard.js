@@ -6,6 +6,7 @@ import { Container } from "@material-ui/core";
 import { getPostMonthly } from "../api";
 import DailyResult from "../components/DailyResult";
 import useLoginRedirect from "../hooks/useLoginRedirect";
+import ErrorMessage from "./../components/ErrorMessage";
 
 // time functions
 const getDayUnix = (year, month, date) => ({
@@ -20,6 +21,7 @@ const Dashboard = () => {
   const [posts, setPosts] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalDate, setModalDate] = useState(1);
+  const [errorMessage, setErrorMessage] = useState(null);
   useLoginRedirect();
 
   useEffect(() => {
@@ -57,6 +59,7 @@ const Dashboard = () => {
 
   return (
     <Container maxWidth="xs" id="dashboard">
+      <ErrorMessage message={errorMessage} />
       {!isModalOpen ? (
         <>
           {posts ? (
@@ -85,7 +88,7 @@ const Dashboard = () => {
             ""
           )}
           <hr />
-          <Factor />
+          <Factor setErrorMessage={setErrorMessage} />
         </>
       ) : (
         ""

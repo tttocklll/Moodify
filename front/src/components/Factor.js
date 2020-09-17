@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import { getPositiveFactor, getNegativeFactor } from "../api";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -17,11 +18,7 @@ function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box>{children}</Box>}
     </div>
   );
 }
@@ -32,10 +29,26 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-const Factor = () => {
-  const [factor, setFactor] = useState(null);
+const Factor = (props) => {
+  const [positiveFactor, setPositiveFactor] = useState([]);
+  const [negativeFactor, setNegativeFactor] = useState([]);
   const [isPositive, setIsPositive] = useState(1);
-  // TODO: 要素取得
+  const { setErrorMessage } = props;
+
+  useEffect(() => {
+    const f = async () => {
+      try {
+        const positiveRes = await getPositiveFactor();
+        setPositiveFactor(positiveRes.data);
+        const negativeRes = await getNegativeFactor();
+        setNegativeFactor(negativeRes.data);
+      } catch (err) {
+        setErrorMessage(err);
+      }
+    };
+    f();
+  }, []);
+
   return (
     <div>
       <AppBar
@@ -53,13 +66,13 @@ const Factor = () => {
         </Tabs>
       </AppBar>
       <TabPanel value={isPositive} index={1}>
-        {factor ? (
+        {positiveFactor.length !== 0 ? (
           <div>
-            {factor[0]}
+            {positiveFactor[0]}
             <hr />
-            {factor[2]}
+            {positiveFactor[1]}
             <hr />
-            {factor[3]}
+            {positiveFactor[2]}
             <hr />
           </div>
         ) : (
@@ -67,13 +80,13 @@ const Factor = () => {
         )}
       </TabPanel>
       <TabPanel value={isPositive} index={0}>
-        {factor ? (
+        {negativeFactor.length !== 0 ? (
           <div>
-            {factor[0]}
+            {negativeFactor[0]}
             <hr />
-            {factor[2]}
+            {negativeFactor[1]}
             <hr />
-            {factor[3]}
+            {negativeFactor[2]}
             <hr />
           </div>
         ) : (

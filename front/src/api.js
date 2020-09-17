@@ -116,3 +116,25 @@ export const getPostDetails = async (post_id) => {
   });
   return res;
 };
+
+export const getPositiveFactor = async () => {
+  const token = await asyncLocalStorage.getItem("access_token");
+  const res = await axios.get(`${baseURL}/get-factor/positive`, {
+    headers: {
+      "Content-Type": "application/json",
+      token: token,
+    },
+  });
+  return res;
+};
+
+export const getNegativeFactor = async () => {
+  const token = await asyncLocalStorage.getItem("access_token");
+  const res = await axios.get(`${baseURL}/get-factor/negative`, {
+    headers: {
+      "Content-Type": "application/json",
+      token: token,
+    },
+  });
+  return res;
+};
