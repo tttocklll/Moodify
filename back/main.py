@@ -165,7 +165,7 @@ async def update_next_questions(user_id: int, questions: List[int], db: Session 
         raise HTTPException(
             status_code=422, detail="Questions must have 3 integers")
     for i in questions:
-        question = crud.get_question_by_id(db, i)
+        question = await crud.get_question_by_id(db, i)
         if not question:
             raise HTTPException(
                 status_code=422, detail=f"Question id:{i} not found.")
@@ -220,5 +220,12 @@ def test(db: Session = Depends(get_db)):
     return {"test": "OK"}
 
 
+@app.get("/test2/")
+def test2(db: Session = Depends(get_db)):
+    print(datetime.datetime.fromtimestamp(get_lastdate_unix(2020, 9)))
+
+    return {"test": "OK"}
+
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0")
+    uvicorn.run("main:app", host="0.0.0.0", reload=True)
