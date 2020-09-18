@@ -65,7 +65,7 @@ const Factor = (props) => {
           <Tab label="ネガティブ" />
         </Tabs>
       </AppBar>
-      <TabPanel value={isPositive} index={1}>
+      <TabPanel value={isPositive} index={0}>
         {positiveFactor.length !== 0 ? (
           <div>
             {positiveFactor[0]}
@@ -79,7 +79,7 @@ const Factor = (props) => {
           "データがありません"
         )}
       </TabPanel>
-      <TabPanel value={isPositive} index={0}>
+      <TabPanel value={isPositive} index={1}>
         {negativeFactor.length !== 0 ? (
           <div>
             {negativeFactor[0]}
