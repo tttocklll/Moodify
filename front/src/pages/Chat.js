@@ -89,6 +89,8 @@ function CustomChatbot(props) {
     return res;
   };
 
+  // TODO: type 2 の実装
+
   const steps = questions && [
     {
       id: "Greet",
@@ -249,7 +251,7 @@ function CustomChatbot(props) {
     },
     {
       id: "Asking options of scene",
-      message: `何をしてその感情になったのかな？`,
+      message: `何をしてその感情になったのかな？(複数選択可)`,
       trigger: "Displaying options of scene",
     },
     {

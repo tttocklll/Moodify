@@ -116,6 +116,16 @@ async def get_status(token: str = Header(None), db: Session = Depends(get_db)):
     return await crud.get_current_student(token, db)
 
 
+@app.get("/post/{user_id}")
+async def get_user_posts(user_id: int, db: Session = Depends(get_db)):
+    posts = await crud.get_post_by_user_id(db, user_id)
+    for post in posts:
+        for answer in post.answers:
+            answer.question
+        post.scenes
+    return posts
+
+
 @app.post("/post/")
 @async_authorization
 async def post(
