@@ -119,8 +119,7 @@ async def get_post_by_user_and_time(db: Session, start: float, end: float, user_
     return db.query(models.Post).filter(start <= models.Post.posted_at).filter(models.Post.posted_at <= end).filter(models.Post.user_id == user_id).all()
 
 
-async def create_post(db: Session, post: schemas.PostCreate, user_id: int):
-    posted_at = datetime.now().timestamp()
+async def create_post(db: Session, post: schemas.PostCreate, user_id: int, posted_at: float):
     db_post = models.Post(
         user_id=user_id,
         posted_at=posted_at,
