@@ -51,7 +51,7 @@ function CustomChatbot(props) {
     }
   };
 
-  const waitTime = 750;
+  const waitTime = 500;
   const config = {
     width: `${width}px`,
     height: `${height}px`,
@@ -88,8 +88,6 @@ function CustomChatbot(props) {
     }
     return res;
   };
-
-  // TODO: type 2 の実装
 
   const steps = questions && [
     {
@@ -136,6 +134,8 @@ function CustomChatbot(props) {
     {
       id: "A1",
       options: createOptions(["はい", "いいえ"], ["はい", "いいえ"], "Q2"),
+      user: questions[0].type === 2,
+      trigger: "Q2",
     },
     {
       id: "Q2",
@@ -145,6 +145,8 @@ function CustomChatbot(props) {
     {
       id: "A2",
       options: createOptions(["はい", "いいえ"], ["はい", "いいえ"], "Q3"),
+      user: questions[1].type === 2,
+      trigger: "Q3",
     },
     {
       id: "Q3",
@@ -154,6 +156,8 @@ function CustomChatbot(props) {
     {
       id: "A3",
       options: createOptions(["はい", "いいえ"], ["はい", "いいえ"], "Thanks"),
+      user: questions[2].type === 2,
+      trigger: "Thanks",
     },
     {
       id: "Thanks",
