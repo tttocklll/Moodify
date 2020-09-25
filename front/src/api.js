@@ -95,6 +95,15 @@ export const postChat = async (body) => {
   return res;
 };
 
+export const getUserPosts = async (user_id) => {
+  const res = await axios.get(`${baseURL}/post/${user_id}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return res;
+};
+
 export const getPostMonthly = async (year, month) => {
   const token = await asyncLocalStorage.getItem("access_token");
   const res = await axios.get(`${baseURL}/post/?year=${year}&month=${month}`, {

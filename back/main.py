@@ -9,6 +9,7 @@ import datetime
 import calendar
 from app import crud, models, schemas
 from app.database import SessionLocal, engine
+import random
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 10000
 
@@ -18,7 +19,8 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://teachtech-moodify.japaneast.cloudapp.azure.com:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -95,6 +97,7 @@ async def login_for_access_token(form_data: schemas.Login, db: Session = Depends
 
 @app.post("/students/", response_model=schemas.Student)
 def create_student(student: schemas.StudentCreate, db: Session = Depends(get_db)):
+    print(type(student))
     db_student = crud.get_student_by_email(db, email=student.email)
     if db_student:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -116,6 +119,16 @@ async def get_status(token: str = Header(None), db: Session = Depends(get_db)):
     return await crud.get_current_student(token, db)
 
 
+@app.get("/post/{user_id}")
+async def get_user_posts(user_id: int, db: Session = Depends(get_db)):
+    posts = await crud.get_post_by_user_id(db, user_id)
+    for post in posts:
+        for answer in post.answers:
+            answer.question
+        post.scenes
+    return posts
+
+
 @app.post("/post/")
 @async_authorization
 async def post(
@@ -125,7 +138,7 @@ async def post(
 ):
     student = await crud.get_current_student(token, db)
     user_id = student.id
-    post = await crud.create_post(db, post, user_id)
+    post = await crud.create_post(db, post, user_id, datetime.datetime.now().timestamp())
     return post
 
 
@@ -210,20 +223,58 @@ async def get_post_detail(post_id: int, token: str = Header(None), db: Session =
         answer.question
     return {"scenes": post.scenes, "answers": post.answers}
 
-# test
+# デモデータ
 
 
-@app.get("/test/")
-def test(db: Session = Depends(get_db)):
-    print(datetime.datetime.fromtimestamp(get_lastdate_unix(2020, 9)))
-
-    return {"test": "OK"}
-
-
-@app.get("/test2/")
-def test2(db: Session = Depends(get_db)):
-    print(datetime.datetime.fromtimestamp(get_lastdate_unix(2020, 9)))
-
+@app.post("/test/")
+async def test(year: int, month: int, db: Session = Depends(get_db)):
+    prev = db.query(models.Student).filter_by(name="test").first()
+    if prev:
+        db.delete(prev)
+    db.commit()
+    data: schemas.StudentCreate = {
+        "name": "test", "email": "test", "password": "test"}
+    student = crud.create_student(
+        db=db, student=schemas.StudentCreate(name="test", email="test", password="test"))
+    cur_date = datetime.datetime(year, month, 1, 7)
+    today = datetime.datetime.now()
+    positive = [
+        "楽しい",
+        "嬉しい",
+        "感謝",
+        "驚き",
+        "わくわく",
+        "穏やか",
+        "爽やか",
+        "愛おしい",
+        "恥ずかしい",
+    ]
+    negative = [
+        "焦り",
+        "不安",
+        "怒り",
+        "重圧",
+        "恐怖",
+        "恥ずかしい",
+        "悲しい",
+        "罪悪感",
+        "緊張",
+        "孤独",
+        "嫉妬",
+        "嫌悪",
+    ]
+    scenes = ["読書", "スポーツ", "旅行", "ゲーム", "友達と遊ぶ"] + \
+        ["国語", "数学", "理科", "社会", "英語"]
+    while cur_date <= today:
+        emotion_value = random.randint(1, 6)
+        emotion_phrase = random.choice(
+            positive if emotion_value >= 4 else negative)
+        answers = [schemas.Answer(answer=random.choice(
+            ["はい", "いいえ"]), question_id=random.randint(1, 6)) for _ in range(3)]
+        await crud.create_post(db, schemas.PostCreate(emotion_value=emotion_value, emotion_phrase=emotion_phrase,
+                                                      comment="comment", temp_scenes=random.sample(scenes, 2), answers=answers), student.id, cur_date.timestamp())
+        cur_date = cur_date + datetime.timedelta(hours=12)
+    db.commit()
     return {"test": "OK"}
 
 
