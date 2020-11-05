@@ -20,7 +20,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://teachtech-moodify.japaneast.cloudapp.azure.com:3000"],
+        "*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
