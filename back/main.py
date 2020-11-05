@@ -278,5 +278,6 @@ async def test(year: int, month: int, db: Session = Depends(get_db)):
     return {"test": "OK"}
 
 
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", reload=True)
+@app.get("/")
+def main():
+    return {"message": "Hello"}
