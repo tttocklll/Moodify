@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "@material-ui/core";
 import { getUserPosts, getAllStudents } from "../api";
+import ErrorMessage from './../components/ErrorMessage';
 
 const ShowPosts = () => {
   const [id, setId] = useState(8);
@@ -35,6 +36,7 @@ const ShowPosts = () => {
 
   return (
     <Container maxWidth="xs">
+      <ErrorMessage message={errorMessage} />
       <hr />
       {students && (
         <select value={id} onChange={(e) => setId(Number(e.target.value))}>

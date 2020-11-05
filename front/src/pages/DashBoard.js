@@ -34,7 +34,7 @@ const Dashboard = () => {
         );
         setPosts(res.data);
       } catch (err) {
-        console.log(err.message);
+        setErrorMessage(err.message);
       }
     };
     f();

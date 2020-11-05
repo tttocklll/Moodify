@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { AppBar, Tabs, Tab, Box, Button } from "@material-ui/core";
+import { AppBar, Tabs, Tab, Box } from "@material-ui/core";
 import { getPostDetails } from "../api";
 import ErrorMessage from "./../components/ErrorMessage";
 import ResultDetails from "./ResultDetails";
-
-const emoji = ["😆", "😄", "😃", "😓", "😫", "😨"];
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

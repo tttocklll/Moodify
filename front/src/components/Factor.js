@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
+import { AppBar, Tabs, Tab, Box } from "@material-ui/core";
 import { getPositiveFactor, getNegativeFactor } from "../api";
 
 function TabPanel(props) {
@@ -43,10 +39,11 @@ const Factor = (props) => {
         const negativeRes = await getNegativeFactor();
         setNegativeFactor(negativeRes.data);
       } catch (err) {
-        setErrorMessage(err);
+        setErrorMessage(err.message);
       }
     };
     f();
+    // eslint-disable-next-line
   }, []);
 
   return (
