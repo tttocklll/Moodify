@@ -1,7 +1,7 @@
 import axios from "axios";
 import { asyncLocalStorage } from "./utils";
 
-const baseURL = "https://moodify-back-6u0ppphk8.vercel.app";
+const baseURL = "https://moodify-back.vercel.app";
 
 export const test = async () => {
   const res = await axios.get(`${baseURL}/test/`);
