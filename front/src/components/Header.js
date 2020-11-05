@@ -5,10 +5,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-// import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from "@material-ui/icons/AccountCircle";
-// import MenuItem from '@material-ui/core/MenuItem';
-// import Menu from '@material-ui/core/Menu';
 import ChatIcon from "@material-ui/icons/Chat";
 import TodayIcon from "@material-ui/icons/Today";
 
@@ -34,9 +31,6 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton> */}
           <Typography variant="h6" className={classes.title}>
             <button
               style={{
@@ -64,7 +58,7 @@ export default function MenuAppBar() {
                 aria-haspopup="true"
                 color="inherit"
                 onClick={() => history.push("/dashboard")}
-                className={location.pathname === "/dashboard" && classes.active}
+                className={location.pathname === "/dashboard" ? classes.active : ""}
               >
                 <TodayIcon />
               </IconButton>
@@ -74,7 +68,7 @@ export default function MenuAppBar() {
                 aria-haspopup="true"
                 color="inherit"
                 onClick={() => history.push("/chat")}
-                className={location.pathname === "/chat" && classes.active}
+                className={location.pathname === "/chat" ? classes.active : ""}
               >
                 <ChatIcon />
               </IconButton>
@@ -84,7 +78,7 @@ export default function MenuAppBar() {
                 aria-haspopup="true"
                 color="inherit"
                 onClick={() => history.push("/mypage")}
-                className={location.pathname === "/mypage" && classes.active}
+                className={location.pathname === "/mypage" ? classes.active : ""}
               >
                 <AccountCircle />
               </IconButton>
