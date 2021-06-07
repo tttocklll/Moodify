@@ -1,3 +1,4 @@
+import os
 from sqlalchemy.orm import Session
 from . import models, schemas
 import hashlib
@@ -9,7 +10,7 @@ from fastapi import Depends, FastAPI, HTTPException, status
 
 # to get a string like this run:
 # openssl rand -hex 32
-SECRET_KEY = "91a63ede3ef783ba8e1578db94068af8dc23bacb6624fd1e720d66627a0e0fdb"
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
