@@ -6,6 +6,7 @@ from fastapi import Depends, FastAPI, HTTPException, status, Header
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import datetime
+from dateutil.relativedelta import relativedelta
 import calendar
 from app import crud, models, schemas
 from app.database import SessionLocal, engine
@@ -58,7 +59,7 @@ def get_firstdate_unix(year: int, month: int):
 
 
 def get_lastdate_unix(year: int, month: int):
-    nextdate = datetime.datetime(year, month + 1, 1)
+    nextdate = datetime.datetime(year, month, 1) + relativedelta(months=1)
     lastdate = nextdate - datetime.timedelta(seconds=1)
     return lastdate.timestamp()
 
